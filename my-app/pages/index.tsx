@@ -4,28 +4,31 @@ import style from '../styles/index.module.scss'
 
 import CustomizedTablesMarket from "../UI/Table/TableMarket";
 import CustomizedTablesBasket from "../UI/Table/TableBasket";
+import {useAction} from "../hooks/useAction";
 
 const Index = () => {
+  const {addBeer} = useAction()
 
-  const dragOverHandler = (e: any, beers: any) => {
+  const dragOverHandler = (e: any) => {
     e.preventDefault()
   }
 
   const dragLeaveHandler = (e: any) => {
-    console.log(1)
-    e.target.style.boxShadow = 'none'
   }
 
-  const dragStartHandler = (e: any) => {
-
+  const dragStartHandler = (e: any, beer: any) => {
+    console.log(beer)
   }
 
   const dragEndHandler = (e: any, beers: any) => {
+    // addBeer(beers)
+    console.log(333)
   }
 
-  const dropHandler = (e: any, beers: any) => {
-    console.log(e)
+  const dropHandler = (e: any) => {
     e.preventDefault()
+    // addBeer(beer)
+    console.log(111113123123123)
   }
 
   return (
@@ -37,17 +40,15 @@ const Index = () => {
       <div className={style.wrapper_market}>
         <p className={style.wrapper_market_title}>Market</p>
         <CustomizedTablesMarket
-          dragOverHandler={dragOverHandler}
           dragEndHandler={dragEndHandler}
           dragLeaveHandler={dragLeaveHandler}
           dragStartHandler={dragStartHandler}/>
       </div>
-      <div className={style.wrapper_basket}>
-        <div>
-          <p className={style.wrapper_market_title}>Basket</p>
-          <CustomizedTablesBasket
-            dropHandler={dropHandler}/>
-        </div>
+      <div className={style.wrapper_basket} onDrop={() => dropHandler}>
+        <p className={style.wrapper_market_title}>Basket</p>
+        <CustomizedTablesBasket
+          dragOverHandler={dragOverHandler}
+          dropHandler={dropHandler}/>
       </div>
     </div>
   )

@@ -1,9 +1,10 @@
 import {configureStore} from '@reduxjs/toolkit'
-import {beersApi} from './beersApi'
+import {beersApi} from './beer/beersApi'
+import {selectBeerReducer} from "./beer/beerSlice";
 
 export const store = configureStore({
   reducer: {
-    [beersApi.reducerPath]: beersApi.reducer,
+    [beersApi.reducerPath]: beersApi.reducer, selectBeer: selectBeerReducer
   },
   middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(beersApi.middleware)
 })
