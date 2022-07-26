@@ -7,9 +7,8 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import {useGetBeersQuery} from "../../redux/beersApi";
-import {beersType} from "../../types/beersType";
-import {ChangeEvent, DragEventHandler} from "react";
+import {useGetBeersQuery} from "../../redux/beer/beersApi";
+import {beersType} from "../../redux/beer/beersType";
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -18,6 +17,10 @@ const StyledTableCell = styled(TableCell)(({theme}) => ({
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+  },
+  maxWidth: 70,
+  'img': {
+    width: '30%'
   },
 }));
 
@@ -28,14 +31,6 @@ const StyledTableRow = styled(TableRow)(({theme}) => ({
   '&:last-child td, &:last-child th': {
     border: 0,
   },
-}));
-
-const CellImage = styled(TableRow)(({theme}) => ({
-  maxWidth: 70,
-  display: 'block',
-  'img': {
-    width: '100%'
-  }
 }));
 
 function createData(
@@ -49,15 +44,13 @@ function createData(
 }
 
 interface TableMarketProp {
-  dragOverHandler: (e, beer: beersType) => void
-  dragLeaveHandler: (e) => void
-  dragStartHandler: (e) => void
-  dragEndHandler: (e, beer: beersType) => void
+  dragLeaveHandler: (e: any) => void
+  dragStartHandler: (e: any, beer: any) => void
+  dragEndHandler: (e: any, beer: beersType) => void
 }
 
 export default function CustomizedTablesMarket(
   {
-    dragOverHandler,
     dragLeaveHandler,
     dragStartHandler,
     dragEndHandler
@@ -68,7 +61,7 @@ export default function CustomizedTablesMarket(
       <Table>
         <TableHead>
           <TableRow>
-            <StyledTableCell align={'center'}>Beers</StyledTableCell>
+            <StyledTableCell align='center'>Beers</StyledTableCell>
             <StyledTableCell align="left">Name</StyledTableCell>
             <StyledTableCell align="center">Description</StyledTableCell>
             <StyledTableCell align="center">Volume</StyledTableCell>
@@ -78,15 +71,14 @@ export default function CustomizedTablesMarket(
           {data?.map((beer: beersType) => (
             <StyledTableRow
               className={'beers'}
-              onDragOver={(e) => dragOverHandler(e, beer)}
               onDragLeave={(e) => dragLeaveHandler(e)}
-              onDragStart={(e) => dragStartHandler(e)}
+              onDragStart={(e) => dragStartHandler(e, beer)}
               onDragEnd={(e) => dragEndHandler(e, beer)}
               draggable={true}
               key={beer.id}>
-              <CellImage>
+              <StyledTableCell>
                 <img src={beer.image_url} alt='beerImg'/>
-              </CellImage>
+              </StyledTableCell>
               <StyledTableCell component="th" scope="row">
                 {beer.name}
               </StyledTableCell>

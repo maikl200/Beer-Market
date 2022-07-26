@@ -7,9 +7,10 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import {useGetBeersQuery} from "../../redux/beersApi";
-import {beersType} from "../../types/beersType";
+import {useGetBeersQuery} from "../../redux/beer/beersApi";
+import {beersType} from "../../redux/beer/beersType";
 import {FC} from "react";
+import {useTypedSelector} from "../../hooks/useTypedSelector";
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -19,6 +20,10 @@ const StyledTableCell = styled(TableCell)(({theme}) => ({
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
   },
+  maxWidth: 70,
+  'img': {
+    width: '30%'
+  }
 }));
 
 const StyledTableRow = styled(TableRow)(({theme}) => ({
@@ -28,14 +33,6 @@ const StyledTableRow = styled(TableRow)(({theme}) => ({
   '&:last-child td, &:last-child th': {
     border: 0,
   },
-}));
-
-const CellImage = styled(TableRow)(({theme}) => ({
-  maxWidth: 70,
-  display: 'block',
-  'img': {
-    width: '100%'
-  }
 }));
 
 function createData(
@@ -49,26 +46,41 @@ function createData(
 }
 
 interface TableBasketProp {
-  dropHandler: (e, beers) => void
+  dropHandler: (e: any, beer: any) => void
+  dragOverHandler: (e: any) => void
 }
 
-export default function CustomizedTablesBasket({dropHandler}: TableBasketProp) {
-  const {data} = useGetBeersQuery('beers')
+export default function CustomizedTablesBasket({dropHandler, dragOverHandler}: TableBasketProp) {
+  const {selectBeer} = useTypedSelector(state => state.selectBeer)
 
   return (
     <TableContainer component={Paper}>
-      <Table sx={{minWidth: 700}} aria-label="customized table">
+      <Table>
         <TableHead>
-          <TableRow
-            onDrop={(e) => dropHandler(e, beers)}
-          >
-            <StyledTableCell>Beers</StyledTableCell>
-            <StyledTableCell align="right">Name</StyledTableCell>
+          <TableRow>
+            <StyledTableCell align='center'>Beers</StyledTableCell>
+            <StyledTableCell align="left">Name</StyledTableCell>
             <StyledTableCell align="right">Description</StyledTableCell>
             <StyledTableCell align="right">Volume</StyledTableCell>
           </TableRow>
         </TableHead>
         <TableBody>
+          {selectBeer?.map((beer: beersType) => (
+            <StyledTableRow
+              className={'beers'}
+              onDrop={(e) => dropHandler(e, beer)}
+              draggable={true}
+              key={beer.id + 1}>
+              <StyledTableCell>
+                <img src={beer.image_url} alt='beerImg'/>
+              </StyledTableCell>
+              <StyledTableCell component="th" scope="row">
+                {beer.name}
+              </StyledTableCell>
+              <StyledTableCell align="right">{beer.description}</StyledTableCell>
+              <StyledTableCell align="right">{beer.volume.unit} {beer.volume.value}</StyledTableCell>
+            </StyledTableRow>
+          ))}
         </TableBody>
       </Table>
     </TableContainer>
