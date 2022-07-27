@@ -1,17 +1,18 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
-import {beersType} from "./beersType";
+import {ProductType} from "./ProductType";
 
-export const selectedBeerSlice = createSlice({
-  name: 'selectedBeer',
+export const productSlice = createSlice({
+  name: 'product',
   initialState: {
-    selectBeer: [] as beersType[]
-  } ,
+    basket: [] as ProductType[],
+    market: []
+  },
   reducers: {
-    addBeer: (state, action: PayloadAction<beersType>) => {
-      state.selectBeer.push(action.payload)
+    addProduct: (state, action: PayloadAction<ProductType>) => {
+      state.basket.push(action.payload)
     }
   }
 })
 
-export const selectBeerReducer = selectedBeerSlice.reducer
-export const selectBeerAction = selectedBeerSlice.actions
+export const productSliceReducer = productSlice.reducer
+export const productSliceAction = productSlice.actions

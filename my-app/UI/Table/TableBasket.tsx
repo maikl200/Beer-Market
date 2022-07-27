@@ -8,9 +8,11 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import {useGetBeersQuery} from "../../redux/beer/beersApi";
-import {beersType} from "../../redux/beer/beersType";
-import {FC} from "react";
+import {ProductType} from "../../redux/beer/ProductType";
+import {FC, useEffect, useState} from "react";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
+import {log} from "util";
+import {useAction} from "../../hooks/useAction";
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -45,44 +47,46 @@ function createData(
   return {name, calories, fat, carbs, protein};
 }
 
-interface TableBasketProp {
-  dropHandler: (e: any, beer: any) => void
-  dragOverHandler: (e: any) => void
-}
+export default function CustomizedTablesBasket({dragOverHandler, dropHandler}: any) {
+  const {basket} = useTypedSelector(state => state.products)
 
-export default function CustomizedTablesBasket({dropHandler, dragOverHandler}: TableBasketProp) {
-  const {selectBeer} = useTypedSelector(state => state.selectBeer)
+  const [products, setProducts] = useState<ProductType[]>([])
+
+  useEffect(() => {
+    setProducts(JSON.parse(localStorage.getItem('selectProduct')!) ?? [])
+  }, [basket])
 
   return (
     <TableContainer component={Paper}>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <StyledTableCell align='center'>Beers</StyledTableCell>
-            <StyledTableCell align="left">Name</StyledTableCell>
-            <StyledTableCell align="right">Description</StyledTableCell>
-            <StyledTableCell align="right">Volume</StyledTableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {selectBeer?.map((beer: beersType) => (
-            <StyledTableRow
-              className={'beers'}
-              onDrop={(e) => dropHandler(e, beer)}
-              draggable={true}
-              key={beer.id + 1}>
-              <StyledTableCell>
-                <img src={beer.image_url} alt='beerImg'/>
-              </StyledTableCell>
-              <StyledTableCell component="th" scope="row">
-                {beer.name}
-              </StyledTableCell>
-              <StyledTableCell align="right">{beer.description}</StyledTableCell>
-              <StyledTableCell align="right">{beer.volume.unit} {beer.volume.value}</StyledTableCell>
-            </StyledTableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <>
+        <Table onDragOver={dragOverHandler} onDrop={dropHandler}>
+          <TableHead>
+            <TableRow>
+              <StyledTableCell align='left'>Item</StyledTableCell>
+              <StyledTableCell align="center">Title</StyledTableCell>
+              <StyledTableCell align="center">Category</StyledTableCell>
+              <StyledTableCell align="right">Volume</StyledTableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {products.map((products: ProductType) => (
+              <StyledTableRow
+                className={'beers'}
+                draggable={true}
+                key={products.id}>
+                <StyledTableCell>
+                  <img src={products.image} alt='beerImg'/>
+                </StyledTableCell>
+                <StyledTableCell component="th" scope="row">
+                  {products.title}
+                </StyledTableCell>
+                <StyledTableCell align="right">{products.category}</StyledTableCell>
+                <StyledTableCell align="right">{products.price}</StyledTableCell>
+              </StyledTableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </>
     </TableContainer>
   );
 }

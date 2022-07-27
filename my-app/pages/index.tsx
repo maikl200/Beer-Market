@@ -5,30 +5,33 @@ import style from '../styles/index.module.scss'
 import CustomizedTablesMarket from "../UI/Table/TableMarket";
 import CustomizedTablesBasket from "../UI/Table/TableBasket";
 import {useAction} from "../hooks/useAction";
+import {useState} from "react";
 
 const Index = () => {
-  const {addBeer} = useAction()
+  const {addProduct} = useAction()
+  const [card, setCard] = useState({})
 
+  const dragLeaveHandler = (e: any) => {
+    e.preventDefault()
+  }
+
+  const dragStartHandler = (e: any, product: any) => {
+    setCard(product)
+    // const products = JSON.parse(localStorage.getItem('product')!) ?? []
+    // const aaa = products.find((item: any) => item.id === product.id)
+    // console.log(aaa)
+    // localStorage.setItem('product', JSON.stringify([products]))
+  }
   const dragOverHandler = (e: any) => {
     e.preventDefault()
   }
 
-  const dragLeaveHandler = (e: any) => {
-  }
-
-  const dragStartHandler = (e: any, beer: any) => {
-    console.log(beer)
-  }
-
-  const dragEndHandler = (e: any, beers: any) => {
-    // addBeer(beers)
-    console.log(333)
-  }
-
   const dropHandler = (e: any) => {
     e.preventDefault()
-    // addBeer(beer)
-    console.log(111113123123123)
+    const selectProducts = JSON.parse(localStorage.getItem('selectProduct')!) ?? []
+    localStorage.setItem('selectProduct', JSON.stringify([...selectProducts, card]))
+    //@ts-ignore
+    addProduct(card)
   }
 
   return (
@@ -40,15 +43,16 @@ const Index = () => {
       <div className={style.wrapper_market}>
         <p className={style.wrapper_market_title}>Market</p>
         <CustomizedTablesMarket
-          dragEndHandler={dragEndHandler}
+          dragStartHandler={dragStartHandler}
           dragLeaveHandler={dragLeaveHandler}
-          dragStartHandler={dragStartHandler}/>
+        />
       </div>
-      <div className={style.wrapper_basket} onDrop={() => dropHandler}>
+      <div className={style.wrapper_basket}>
         <p className={style.wrapper_market_title}>Basket</p>
         <CustomizedTablesBasket
           dragOverHandler={dragOverHandler}
-          dropHandler={dropHandler}/>
+          dropHandler={dropHandler}
+        />
       </div>
     </div>
   )

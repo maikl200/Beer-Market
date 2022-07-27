@@ -1,9 +1,9 @@
-import {selectBeerAction} from "../redux/beer/beerSlice";
+import {productSliceAction} from "../redux/beer/beerSlice";
 import {useDispatch} from "react-redux";
 import {bindActionCreators} from "redux";
 
 const allAction = {
-  ...selectBeerAction
+  ...productSliceAction
 }
 export const useAction = () => {
   const dispatch = useDispatch()
