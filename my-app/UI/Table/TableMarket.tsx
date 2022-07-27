@@ -10,6 +10,8 @@ import Paper from '@mui/material/Paper';
 import {useGetBeersQuery} from "../../redux/beer/beersApi";
 import {ProductType} from "../../redux/beer/ProductType";
 import {useEffect, useState} from "react";
+import {useTypedSelector} from "../../hooks/useTypedSelector";
+import {useAction} from "../../hooks/useAction";
 
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
@@ -47,13 +49,17 @@ function createData(
 
 export default function CustomizedTablesMarket({dragStartHandler, dragLeaveHandler}: any) {
   const {data} = useGetBeersQuery('products')
-
-  const [products, setProducts] = useState<ProductType[]>([])
+  const {market} = useTypedSelector(state => state.products)
+  const [product, setProduct] = useState<ProductType[]>()
 
   useEffect(() => {
-    setProducts(JSON.parse(localStorage.getItem('product')!) ?? data)
-  }, [data])
-
+    if (data) {
+      const products = JSON.parse(localStorage.getItem('product')!)
+      setProduct(products)
+      if (products?.length > 1) return
+      localStorage.setItem('product', JSON.stringify(data))
+    }
+  }, [])
 
   return (
     <TableContainer component={Paper}>
@@ -67,7 +73,7 @@ export default function CustomizedTablesMarket({dragStartHandler, dragLeaveHandl
           </TableRow>
         </TableHead>
         <TableBody>
-          {products?.map((product: ProductType) => (
+          {product?.map((product: ProductType) => (
             <StyledTableRow
               onDragStart={(e) => dragStartHandler(e, product)}
               onDragLeave={(e) => dragLeaveHandler(e)}

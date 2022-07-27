@@ -50,10 +50,11 @@ function createData(
 export default function CustomizedTablesBasket({dragOverHandler, dropHandler}: any) {
   const {basket} = useTypedSelector(state => state.products)
 
-  const [products, setProducts] = useState<ProductType[]>([])
+  const [products, setProducts] = useState<ProductType[]>()
 
   useEffect(() => {
-    setProducts(JSON.parse(localStorage.getItem('selectProduct')!) ?? [])
+    const sellProducts = JSON.parse(localStorage.getItem('selectProduct')!)
+    setProducts(sellProducts)
   }, [basket])
 
   return (
@@ -69,7 +70,7 @@ export default function CustomizedTablesBasket({dragOverHandler, dropHandler}: a
             </TableRow>
           </TableHead>
           <TableBody>
-            {products.map((products: ProductType) => (
+            {products?.map((products: ProductType) => (
               <StyledTableRow
                 className={'beers'}
                 draggable={true}

@@ -8,8 +8,8 @@ import {useAction} from "../hooks/useAction";
 import {useState} from "react";
 
 const Index = () => {
-  const {addProduct} = useAction()
-  const [card, setCard] = useState({})
+  const {addProduct, deleteMarketProduct} = useAction()
+  const [card, setCard] = useState<any>()
 
   const dragLeaveHandler = (e: any) => {
     e.preventDefault()
@@ -17,11 +17,12 @@ const Index = () => {
 
   const dragStartHandler = (e: any, product: any) => {
     setCard(product)
-    // const products = JSON.parse(localStorage.getItem('product')!) ?? []
-    // const aaa = products.find((item: any) => item.id === product.id)
-    // console.log(aaa)
-    // localStorage.setItem('product', JSON.stringify([products]))
+    const products = JSON.parse(localStorage.getItem('product')!) ?? []
+    const filterProduct = products.filter((item: any) => item.id !== product.id)
+    localStorage.setItem('product', JSON.stringify([...filterProduct]))
+    deleteMarketProduct(filterProduct)
   }
+
   const dragOverHandler = (e: any) => {
     e.preventDefault()
   }
@@ -30,7 +31,6 @@ const Index = () => {
     e.preventDefault()
     const selectProducts = JSON.parse(localStorage.getItem('selectProduct')!) ?? []
     localStorage.setItem('selectProduct', JSON.stringify([...selectProducts, card]))
-    //@ts-ignore
     addProduct(card)
   }
 

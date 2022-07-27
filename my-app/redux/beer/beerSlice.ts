@@ -10,6 +10,10 @@ export const productSlice = createSlice({
   reducers: {
     addProduct: (state, action: PayloadAction<ProductType>) => {
       state.basket.push(action.payload)
+    },
+    deleteMarketProduct: (state, action: PayloadAction<ProductType>) => {
+      // @ts-ignore
+      state.market.push({...action.payload})
     }
   }
 })
