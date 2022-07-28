@@ -7,12 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import {useGetBeersQuery} from "../../redux/beer/beersApi";
-import {ProductType} from "../../redux/beer/ProductType";
-import {useEffect} from "react";
-import {useTypedSelector} from "../../hooks/useTypedSelector";
-import {useAction} from "../../hooks/useAction";
-
+import {useEffect, useState} from "react";
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -21,10 +16,6 @@ const StyledTableCell = styled(TableCell)(({theme}) => ({
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
-  },
-  maxWidth: 70,
-  'img': {
-    width: '30%'
   },
 }));
 
@@ -35,24 +26,18 @@ const StyledTableRow = styled(TableRow)(({theme}) => ({
   '&:last-child td, &:last-child th': {
     border: 0,
   },
+  'img': {
+    width: '5%'
+  },
 }));
 
-export default function CustomizedTablesMarket({dragStartHandler, dragLeaveHandler}: any) {
-  const {data} = useGetBeersQuery('products')
-  const {productMarket} = useAction()
-  const {market} = useTypedSelector(state => state.products)
+export default function CustomizedTablesSalesHistory() {
+const [salesProduct, setSalesProduct] = useState([])
 
   useEffect(() => {
-    try {
-      if (!market) {
-        localStorage.setItem('product', JSON.stringify(data))
-      }
-      const products = JSON.parse(localStorage.getItem('product')!)
-      productMarket(products)
-    } catch (e) {
-      console.error(e)
-    }
-  }, [data])
+    const sellProduct = JSON.parse(localStorage.getItem('saleProduct')!)
+    setSalesProduct(sellProduct)
+  }, [])
 
   return (
     <TableContainer component={Paper}>
@@ -66,17 +51,10 @@ export default function CustomizedTablesMarket({dragStartHandler, dragLeaveHandl
           </TableRow>
         </TableHead>
         <TableBody>
-          {market?.map((product: ProductType) => (
-            <StyledTableRow
-              onDragStart={(e) => dragStartHandler(e, product)}
-              onDragLeave={(e) => dragLeaveHandler(e)}
-              className={'beers'}
-              draggable={true}
-              key={product.id}>
+          {salesProduct?.map((product) => (
+            <StyledTableRow key={product.id}>
+              <img draggable={false} src={product.image} alt='itemImg'/>
               <StyledTableCell>
-                <img draggable={false} src={product.image} alt='itemImg'/>
-              </StyledTableCell>
-              <StyledTableCell component="th" scope="row">
                 {product.title}
               </StyledTableCell>
               <StyledTableCell align="right">{product.category}</StyledTableCell>

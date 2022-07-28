@@ -1,19 +1,25 @@
-import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import {createSlice} from "@reduxjs/toolkit";
 import {ProductType} from "./ProductType";
 
 export const productSlice = createSlice({
   name: 'product',
   initialState: {
     basket: [] as ProductType[],
-    market: []
+    market: [] as ProductType[],
+    saleProduct: [] as ProductType[]
   },
   reducers: {
-    addProduct: (state, action: PayloadAction<ProductType>) => {
-      state.basket.push(action.payload)
+    productBasket: (state, action) => {
+      state.basket = action.payload
     },
-    deleteMarketProduct: (state, action: PayloadAction<ProductType>) => {
-      // @ts-ignore
-      state.market.push({...action.payload})
+    clearBasket: (state, action) => {
+      state.basket = action.payload
+    },
+    productMarket: (state, action) => {
+      state.market = action.payload
+    },
+    productSale: (state, action) => {
+      state.saleProduct = action.payload
     }
   }
 })

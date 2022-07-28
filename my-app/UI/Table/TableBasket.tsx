@@ -7,12 +7,9 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import {useGetBeersQuery} from "../../redux/beer/beersApi";
 import {ProductType} from "../../redux/beer/ProductType";
-import {FC, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
-import {log} from "util";
-import {useAction} from "../../hooks/useAction";
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -25,6 +22,12 @@ const StyledTableCell = styled(TableCell)(({theme}) => ({
   maxWidth: 70,
   'img': {
     width: '30%'
+  },
+  'input': {
+    width: '100%',
+    border: 'none',
+    background: 'none',
+    outline: 'none'
   }
 }));
 
@@ -37,20 +40,10 @@ const StyledTableRow = styled(TableRow)(({theme}) => ({
   },
 }));
 
-function createData(
-  name: string,
-  calories: number,
-  fat: number,
-  carbs: number,
-  protein: number,
-) {
-  return {name, calories, fat, carbs, protein};
-}
-
 export default function CustomizedTablesBasket({dragOverHandler, dropHandler}: any) {
   const {basket} = useTypedSelector(state => state.products)
-
   const [products, setProducts] = useState<ProductType[]>()
+  const [readOnly, setReadOnly] = useState<boolean>(true)
 
   useEffect(() => {
     const sellProducts = JSON.parse(localStorage.getItem('selectProduct')!)
@@ -73,16 +66,24 @@ export default function CustomizedTablesBasket({dragOverHandler, dropHandler}: a
             {products?.map((products: ProductType) => (
               <StyledTableRow
                 className={'beers'}
-                draggable={true}
                 key={products.id}>
                 <StyledTableCell>
-                  <img src={products.image} alt='beerImg'/>
+                  <img draggable={false} src={products.image} alt='beerImg'/>
                 </StyledTableCell>
                 <StyledTableCell component="th" scope="row">
-                  {products.title}
+                  <input readOnly={readOnly} defaultValue={products.title}/>
                 </StyledTableCell>
-                <StyledTableCell align="right">{products.category}</StyledTableCell>
-                <StyledTableCell align="right">{products.price}</StyledTableCell>
+                <StyledTableCell
+                  align="right">
+                  <input
+                    readOnly={readOnly}
+                    defaultValue={products.category}/>
+                </StyledTableCell>
+                <StyledTableCell align="right">
+                  <input
+                    readOnly={readOnly}
+                    defaultValue={products.price}/>
+                </StyledTableCell>
               </StyledTableRow>
             ))}
           </TableBody>
