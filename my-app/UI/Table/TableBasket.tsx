@@ -10,6 +10,8 @@ import Paper from '@mui/material/Paper';
 import {ProductType} from "../../redux/beer/ProductType";
 import {useEffect, useState} from "react";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
+import {useAction} from "../../hooks/useAction";
+import {loadWebpackHook} from "next/dist/server/config-utils";
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -40,15 +42,24 @@ const StyledTableRow = styled(TableRow)(({theme}) => ({
   },
 }));
 
+const tableTitle = [
+  {id: 1, title: 'Item'},
+  {id: 2, title: 'Title'},
+  {id: 3, title: 'Category'},
+  {id: 4, title: 'Volume'},
+]
+
 export default function CustomizedTablesBasket({dragOverHandler, dropHandler}: any) {
   const {basket} = useTypedSelector(state => state.products)
-  const [products, setProducts] = useState<ProductType[]>()
+  const {productBasket} = useAction()
   const [readOnly, setReadOnly] = useState<boolean>(true)
 
-  useEffect(() => {
-    const sellProducts = JSON.parse(localStorage.getItem('selectProduct')!)
-    setProducts(sellProducts)
-  }, [basket])
+
+
+  // useEffect(() => {
+  //   const localBasketProduct = JSON.parse(localStorage.getItem('selectProduct')!)
+  //   productBasket(localBasketProduct)
+  // }, [])
 
   return (
     <TableContainer component={Paper}>
@@ -56,14 +67,15 @@ export default function CustomizedTablesBasket({dragOverHandler, dropHandler}: a
         <Table onDragOver={dragOverHandler} onDrop={dropHandler}>
           <TableHead>
             <TableRow>
-              <StyledTableCell align='left'>Item</StyledTableCell>
-              <StyledTableCell align="center">Title</StyledTableCell>
-              <StyledTableCell align="center">Category</StyledTableCell>
-              <StyledTableCell align="right">Volume</StyledTableCell>
+              {tableTitle?.map((title) => (
+                <React.Fragment key={title.id}>
+                  <StyledTableCell>{title.title}</StyledTableCell>
+                </React.Fragment>
+              ))}
             </TableRow>
           </TableHead>
           <TableBody>
-            {products?.map((products: ProductType) => (
+            {basket?.map((products: ProductType) => (
               <StyledTableRow
                 className={'beers'}
                 key={products.id}>
@@ -71,16 +83,17 @@ export default function CustomizedTablesBasket({dragOverHandler, dropHandler}: a
                   <img draggable={false} src={products.image} alt='beerImg'/>
                 </StyledTableCell>
                 <StyledTableCell component="th" scope="row">
-                  <input readOnly={readOnly} defaultValue={products.title}/>
+                  <input draggable={false} readOnly={readOnly} defaultValue={products.title}/>
                 </StyledTableCell>
-                <StyledTableCell
-                  align="right">
+                <StyledTableCell>
                   <input
+                    draggable={false}
                     readOnly={readOnly}
                     defaultValue={products.category}/>
                 </StyledTableCell>
-                <StyledTableCell align="right">
+                <StyledTableCell>
                   <input
+                    draggable={false}
                     readOnly={readOnly}
                     defaultValue={products.price}/>
                 </StyledTableCell>

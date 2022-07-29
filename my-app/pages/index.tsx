@@ -8,7 +8,8 @@ import CustomizedTablesBasket from "../UI/Table/TableBasket";
 import {useAction} from "../hooks/useAction";
 import {useState} from "react";
 import CustomizedButtons from "../UI/Button/Button";
-import {useTypedSelector} from "../hooks/useTypedSelector";
+import {GetServerSideProps, GetStaticProps} from "next";
+import {wrapper} from "../redux/store";
 
 const Index = ({data}: any) => {
 
@@ -25,17 +26,17 @@ const Index = ({data}: any) => {
 
   const dragOverHandler = (e: any) => {
     e.preventDefault()
-    const products = JSON.parse(localStorage.getItem('product')!) ?? []
-    const filterProduct = products.filter((item: any) => item.id !== card.id)
-    productMarket(filterProduct)
-    localStorage.setItem('product', JSON.stringify([...filterProduct]))
   }
 
   const dropHandler = (e: any) => {
     e.preventDefault()
+    const products = JSON.parse(localStorage.getItem('product')!) ?? []
+    const filterProduct = products.filter((item: any) => item.id !== card.id)
+    productMarket(filterProduct)
+    localStorage.setItem('product', JSON.stringify([...filterProduct]))
     const selectProducts = JSON.parse(localStorage.getItem('selectProduct')!) ?? []
     localStorage.setItem('selectProduct', JSON.stringify([...selectProducts, card]))
-    productBasket(card)
+    productBasket([...selectProducts, card])
   }
 
   const salesProduct = () => {
@@ -85,13 +86,12 @@ const Index = ({data}: any) => {
   )
 }
 
-
 export default Index
 
-export async function getServerSideProps() {
+export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps(store => async (ctx) => {
   const response = await fetch('https://fakestoreapi.com/products')
   const data = await response.json()
-  return {
-    props: {data},
-  }
-}
+  store.dispatch(data)
+
+  return {props: {data}}
+})

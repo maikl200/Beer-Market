@@ -1,4 +1,5 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react'
+import {HYDRATE} from "next-redux-wrapper";
 
 export const beersApi = createApi({
   reducerPath: 'beersApi',
@@ -7,7 +8,13 @@ export const beersApi = createApi({
     getBeers: build.query({
       query: (name) => `${name}`,
     })
-  })
+  }),
+  extractRehydrationInfo(action, { reducerPath }) {
+    console.log(action)
+    if (action.type === HYDRATE) {
+      return action.payload[reducerPath]
+    }
+  },
 })
 
 export const { useGetBeersQuery } = beersApi

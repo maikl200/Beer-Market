@@ -8,6 +8,8 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import {useEffect, useState} from "react";
+import {useTypedSelector} from "../../hooks/useTypedSelector";
+import {useAction} from "../../hooks/useAction";
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -32,12 +34,12 @@ const StyledTableRow = styled(TableRow)(({theme}) => ({
 }));
 
 export default function CustomizedTablesSalesHistory() {
-const [salesProduct, setSalesProduct] = useState([])
+  const {saleProduct} = useTypedSelector(state => state.products)
 
-  useEffect(() => {
-    const sellProduct = JSON.parse(localStorage.getItem('saleProduct')!)
-    setSalesProduct(sellProduct)
-  }, [])
+  // useEffect(() => {
+  //   const localSaleProduct = JSON.parse(localStorage.getItem('saleProduct')!)
+  //   productSale(localSaleProduct)
+  // }, [])
 
   return (
     <TableContainer component={Paper}>
@@ -51,7 +53,7 @@ const [salesProduct, setSalesProduct] = useState([])
           </TableRow>
         </TableHead>
         <TableBody>
-          {salesProduct?.map((product) => (
+          {saleProduct?.map((product) => (
             <StyledTableRow key={product.id}>
               <img draggable={false} src={product.image} alt='itemImg'/>
               <StyledTableCell>

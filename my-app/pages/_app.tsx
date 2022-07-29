@@ -2,7 +2,7 @@ import React from "react";
 
 import {Provider} from "react-redux";
 import {NextPage} from "next";
-import {store} from "../redux/store";
+import {store, wrapper} from "../redux/store";
 
 import '../styles/globals.css'
 
@@ -18,4 +18,4 @@ const MyApp: NextPage<props> = ({Component, pageProps}) => {
   </Provider>
 }
 
-export default MyApp
+export default wrapper.withRedux(MyApp)

@@ -37,31 +37,36 @@ const StyledTableRow = styled(TableRow)(({theme}) => ({
   },
 }));
 
-export default function CustomizedTablesMarket({dragStartHandler, dragLeaveHandler, data}: any) {
-  const {productMarket} = useAction()
-  const {market} = useTypedSelector(state => state.products)
+const styledTableCellProps = [
+  {title: 'Item'},
+  {title: 'Title'},
+  {title: 'Category'},
+  {title: 'Volume'},
+]
 
-  useEffect(() => {
-    try {
-      if (!market) {
-        localStorage.setItem('product', JSON.stringify(data))
-      }
-      const products = JSON.parse(localStorage.getItem('product')!)
-      productMarket(products)
-    } catch (e) {
-      console.error(e)
-    }
-  }, [data])
+export default function CustomizedTablesMarket({dragStartHandler, dragLeaveHandler, data}: any) {
+  const {market} = useTypedSelector(state => state.products)
+  const {productMarket} = useAction()
+
+  console.log('data',data?.length)
+  console.log('===>market', market?.length)
+
+  // useEffect(() => {
+  //   const localProductMarker = JSON.parse(localStorage.getItem('product')!)
+  //   if (!localProductMarker?.length) {
+  //     localStorage.setItem('product', JSON.stringify(data))
+  //   }
+  //   productMarket(localProductMarker)
+  // }, [])
 
   return (
     <TableContainer component={Paper}>
       <Table>
         <TableHead>
           <TableRow>
-            <StyledTableCell align='left'>Item</StyledTableCell>
-            <StyledTableCell align="center">Title</StyledTableCell>
-            <StyledTableCell align="center">Category</StyledTableCell>
-            <StyledTableCell align="right">Volume</StyledTableCell>
+            {styledTableCellProps?.map((style) => (
+              <StyledTableCell>{style.title}</StyledTableCell>
+            ))}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -75,11 +80,11 @@ export default function CustomizedTablesMarket({dragStartHandler, dragLeaveHandl
               <StyledTableCell>
                 <img draggable={false} src={product.image} alt='itemImg'/>
               </StyledTableCell>
-              <StyledTableCell component="th" scope="row">
+              <StyledTableCell component="th" scope="row" draggable={false}>
                 {product.title}
               </StyledTableCell>
-              <StyledTableCell align="right">{product.category}</StyledTableCell>
-              <StyledTableCell align="right">{product.price}</StyledTableCell>
+              <StyledTableCell draggable={false}>{product.category}</StyledTableCell>
+              <StyledTableCell draggable={false}>{product.price}</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>
