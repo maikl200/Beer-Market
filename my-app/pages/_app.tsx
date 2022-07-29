@@ -6,6 +6,7 @@ import {store} from "../redux/store";
 
 import '../styles/globals.css'
 
+
 interface props {
   Component: React.FC
   pageProps: any
@@ -16,4 +17,5 @@ const MyApp: NextPage<props> = ({Component, pageProps}) => {
     <Component {...pageProps} />
   </Provider>
 }
+
 export default MyApp

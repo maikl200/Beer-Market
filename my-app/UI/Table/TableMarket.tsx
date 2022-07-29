@@ -9,9 +9,9 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import {useGetBeersQuery} from "../../redux/beer/beersApi";
 import {ProductType} from "../../redux/beer/ProductType";
-import {useEffect} from "react";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
 import {useAction} from "../../hooks/useAction";
+import {useEffect} from "react";
 
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
@@ -37,8 +37,7 @@ const StyledTableRow = styled(TableRow)(({theme}) => ({
   },
 }));
 
-export default function CustomizedTablesMarket({dragStartHandler, dragLeaveHandler}: any) {
-  const {data} = useGetBeersQuery('products')
+export default function CustomizedTablesMarket({dragStartHandler, dragLeaveHandler, data}: any) {
   const {productMarket} = useAction()
   const {market} = useTypedSelector(state => state.products)
 
@@ -66,7 +65,7 @@ export default function CustomizedTablesMarket({dragStartHandler, dragLeaveHandl
           </TableRow>
         </TableHead>
         <TableBody>
-          {market?.map((product: ProductType) => (
+          {data?.map((product: ProductType) => (
             <StyledTableRow
               onDragStart={(e) => dragStartHandler(e, product)}
               onDragLeave={(e) => dragLeaveHandler(e)}

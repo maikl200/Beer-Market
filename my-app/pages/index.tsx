@@ -8,8 +8,10 @@ import CustomizedTablesBasket from "../UI/Table/TableBasket";
 import {useAction} from "../hooks/useAction";
 import {useState} from "react";
 import CustomizedButtons from "../UI/Button/Button";
+import {useTypedSelector} from "../hooks/useTypedSelector";
 
-const Index = () => {
+const Index = ({data}: any) => {
+
   const {clearBasket, productBasket, productSale, productMarket} = useAction()
   const [card, setCard] = useState<any>()
 
@@ -61,6 +63,7 @@ const Index = () => {
         </Link>
         <p className={style.wrapper_market_title}>Market</p>
         <CustomizedTablesMarket
+          data={data}
           dragStartHandler={dragStartHandler}
           dragLeaveHandler={dragLeaveHandler}
         />
@@ -82,4 +85,13 @@ const Index = () => {
   )
 }
 
+
 export default Index
+
+export async function getServerSideProps() {
+  const response = await fetch('https://fakestoreapi.com/products')
+  const data = await response.json()
+  return {
+    props: {data},
+  }
+}
