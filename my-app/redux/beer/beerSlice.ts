@@ -26,6 +26,7 @@ export const productSlice = createSlice({
   },
   extraReducers: {
     [HYDRATE]: (state, action) => {
+      console.log('dddd',action.payload.products)
       state.market = action.payload.products.market
       state.basket = action.payload.products.basket
     }

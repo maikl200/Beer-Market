@@ -33,20 +33,19 @@ const StyledTableRow = styled(TableRow)(({theme}) => ({
   },
 }));
 
-const styledTableCellProps = [
-  {title: 'Item'},
-  {title: 'Title'},
-  {title: 'Category'},
-  {title: 'Volume'},
+const tableTitle = [
+  {id: 1, title: 'Item'},
+  {id: 2, title: 'Title'},
+  {id: 3, title: 'Category'},
+  {id: 4, title: 'Volume'},
 ]
 
-export default function CustomizedTablesMarket({dragStartHandler, dragLeaveHandler, data}: any) {
+export default function CustomizedTablesMarket({dragStartHandler, dragLeaveHandler}: any) {
   const {market} = useTypedSelector(state => state.products)
-  console.log('===>market', market)
 
   return (
     <div
-      style={{height: 680, border: "1px solid black", borderRadius: '6px'}}
+      style={{height: 650, border: "1px solid black", borderRadius: '6px'}}
     >
       <TableContainer component={Paper}>
         <Table
@@ -54,8 +53,10 @@ export default function CustomizedTablesMarket({dragStartHandler, dragLeaveHandl
         >
           <TableHead>
             <TableRow>
-              {styledTableCellProps?.map((style) => (
-                <StyledTableCell>{style.title}</StyledTableCell>
+              {tableTitle?.map((title) => (
+                <React.Fragment key={title.id}>
+                  <StyledTableCell>{title.title}</StyledTableCell>
+                </React.Fragment>
               ))}
             </TableRow>
           </TableHead>

@@ -15,7 +15,7 @@ import {useTypedSelector} from "../hooks/useTypedSelector";
 import {wrapper} from "../redux/store";
 import {productSliceAction} from "../redux/beer/beerSlice";
 
-const Index = ({dataBasketProduct, dataSaleProduct}: any) => {
+const Index = ({dataBasketProduct}: any) => {
   const {clearBasket, setProductBasket, setProductSale, setProductMarket} = useAction()
   const [card, setCard] = useState<any>()
   const [isShowBtn, setIsShowBtn] = useState(false)
@@ -37,6 +37,7 @@ const Index = ({dataBasketProduct, dataSaleProduct}: any) => {
     e.preventDefault()
     const filterProduct = market?.filter((item: any) => item.id !== card.id)
     setProductMarket(filterProduct)
+    nookies.set(null, 'products', JSON.stringify(filterProduct))
     nookies.set(null, 'selectProduct', JSON.stringify([...basket, card]))
     setProductBasket([...basket, card])
   }
@@ -62,26 +63,25 @@ const Index = ({dataBasketProduct, dataSaleProduct}: any) => {
           dragLeaveHandler={dragLeaveHandler}
         />
         {isShowBtn &&
-          <div className={style.wrapper_market_btn}>
-            <Link href='/itemsSold'>
+            <div className={style.wrapper_market_btn}>
+              <Link href='/itemsSold'>
+                <CustomizedButtons
+                    backColorHover='#0a3d62'
+                    backColor='#60a3bc'
+                    title='Sales History'
+                />
+              </Link>
               <CustomizedButtons
-                backColorHover='#0a3d62'
-                backColor='#60a3bc'
-                title='Sales History'
+                  backColor='#079992'
+                  backColorHover='#78e08f'
+                  title='Sell'
+                  onClick={salesProduct}
               />
-            </Link>
-            <CustomizedButtons
-              backColor='#079992'
-              backColorHover='#78e08f'
-              title='Sell'
-              onClick={salesProduct}
-            />
-          </div>}
+            </div>}
       </div>
       <div className={style.wrapper_basket}>
         <p className={style.wrapper_market_title}>Basket</p>
         <CustomizedTablesBasket
-          dataBasketProduct={dataBasketProduct}
           setIsShowBtn={setIsShowBtn}
           dragOverHandler={dragOverHandler}
           dropHandler={dropHandler}
@@ -98,9 +98,17 @@ export const getServerSideProps = wrapper.getServerSideProps(store => async (ctx
   const data = await response.json()
   const cookies = parseCookies(ctx)
 
-  store.dispatch(productSliceAction.setProductMarket(data))
+
   const dataBasketProduct = cookies.selectProduct ? await JSON.parse(cookies.selectProduct) : []
+  const dataProduct = cookies.products ? await JSON.parse(cookies.products) : []
   const dataSaleProduct = cookies.saleProduct ? await JSON.parse(cookies.saleProduct) : []
+  if (!dataProduct?.length && !dataBasketProduct?.length) {
+    store.dispatch(productSliceAction.setProductMarket(data))
+  } else {
+    store.dispatch(productSliceAction.setProductMarket(dataProduct))
+  }
+  store.dispatch(productSliceAction.setProductBasket(dataBasketProduct))
+  store.dispatch(productSliceAction.setProductSale(dataSaleProduct))
 
   return {props: {dataBasketProduct, dataSaleProduct}}
 })

@@ -7,9 +7,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import {useEffect, useState} from "react";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
-import {useAction} from "../../hooks/useAction";
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -34,24 +32,27 @@ const StyledTableRow = styled(TableRow)(({theme}) => ({
   },
 }));
 
+const tableTitle = [
+  {id: 1, title: 'Item'},
+  {id: 2, title: 'Title'},
+  {id: 3, title: 'Category'},
+  {id: 4, title: 'Volume'},
+]
+
+
 export default function CustomizedTablesSalesHistory() {
   const {saleProduct} = useTypedSelector(state => state.products)
-  const {setProductSale} = useAction()
-
-  useEffect(() => {
-    const localSaleProduct = JSON.parse(localStorage.getItem('saleProduct')!)
-    setProductSale(localSaleProduct)
-  }, [])
-
+  console.log('aaa', saleProduct)
   return (
     <TableContainer component={Paper}>
       <Table>
         <TableHead>
           <TableRow>
-            <StyledTableCell align='left'>Item</StyledTableCell>
-            <StyledTableCell align="center">Title</StyledTableCell>
-            <StyledTableCell align="center">Category</StyledTableCell>
-            <StyledTableCell align="right">Volume</StyledTableCell>
+            {tableTitle?.map((title) => (
+              <React.Fragment key={title.id}>
+                <StyledTableCell>{title.title}</StyledTableCell>
+              </React.Fragment>
+            ))}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -61,8 +62,8 @@ export default function CustomizedTablesSalesHistory() {
               <StyledTableCell>
                 {product.title}
               </StyledTableCell>
-              <StyledTableCell align="right">{product.category}</StyledTableCell>
-              <StyledTableCell align="right">{product.price}</StyledTableCell>
+              <StyledTableCell>{product.category}</StyledTableCell>
+              <StyledTableCell>{product.price}</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>

@@ -82,7 +82,11 @@ export default function CustomizedTablesBasket({setIsShowBtn, dragOverHandler, d
                   className={'beers'}
                   key={products.id}>
                   <StyledTableCell>
-                    <img draggable={false} src={products.image} alt='beerImg'/>
+                    <img
+                      draggable={false}
+                      src={products.image}
+                      alt='beerImg'
+                    />
                   </StyledTableCell>
                   <StyledTableCell component="th" scope="row">
                     <input draggable={false} readOnly={readOnly} defaultValue={products.title}/>
