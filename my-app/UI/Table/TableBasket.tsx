@@ -15,9 +15,11 @@ const StyledTableCell = styled(TableCell)(({theme}) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.common.black,
     color: theme.palette.common.white,
+
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+    maxHeight: 600,
   },
   maxWidth: 70,
   'img': {
@@ -28,7 +30,8 @@ const StyledTableCell = styled(TableCell)(({theme}) => ({
     border: 'none',
     background: 'none',
     outline: 'none'
-  }
+  },
+  maxHeight: 600
 }));
 
 const StyledTableRow = styled(TableRow)(({theme}) => ({
@@ -40,55 +43,68 @@ const StyledTableRow = styled(TableRow)(({theme}) => ({
   },
 }));
 
-export default function CustomizedTablesBasket({dragOverHandler, dropHandler}: any) {
+const tableTitle = [
+  {id: 1, title: 'Item'},
+  {id: 2, title: 'Title'},
+  {id: 3, title: 'Category'},
+  {id: 4, title: 'Volume'},
+]
+
+export default function CustomizedTablesBasket({setIsShowBtn, dragOverHandler, dropHandler}: any) {
   const {basket} = useTypedSelector(state => state.products)
-  const [products, setProducts] = useState<ProductType[]>()
   const [readOnly, setReadOnly] = useState<boolean>(true)
 
   useEffect(() => {
-    const sellProducts = JSON.parse(localStorage.getItem('selectProduct')!)
-    setProducts(sellProducts)
+    if (basket?.length) setIsShowBtn(true)
   }, [basket])
 
   return (
-    <TableContainer component={Paper}>
-      <>
-        <Table onDragOver={dragOverHandler} onDrop={dropHandler}>
-          <TableHead>
-            <TableRow>
-              <StyledTableCell align='left'>Item</StyledTableCell>
-              <StyledTableCell align="center">Title</StyledTableCell>
-              <StyledTableCell align="center">Category</StyledTableCell>
-              <StyledTableCell align="right">Volume</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {products?.map((products: ProductType) => (
-              <StyledTableRow
-                className={'beers'}
-                key={products.id}>
-                <StyledTableCell>
-                  <img draggable={false} src={products.image} alt='beerImg'/>
-                </StyledTableCell>
-                <StyledTableCell component="th" scope="row">
-                  <input readOnly={readOnly} defaultValue={products.title}/>
-                </StyledTableCell>
-                <StyledTableCell
-                  align="right">
-                  <input
-                    readOnly={readOnly}
-                    defaultValue={products.category}/>
-                </StyledTableCell>
-                <StyledTableCell align="right">
-                  <input
-                    readOnly={readOnly}
-                    defaultValue={products.price}/>
-                </StyledTableCell>
-              </StyledTableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </>
-    </TableContainer>
+    <div
+      onDragOver={dragOverHandler}
+      onDrop={dropHandler}
+      style={{height: 675, border: "1px solid black", borderRadius: '6px'}}>
+      <TableContainer component={Paper}>
+        <>
+          <Table
+          >
+            <TableHead>
+              <TableRow>
+                {tableTitle?.map((title) => (
+                  <React.Fragment key={title.id}>
+                    <StyledTableCell>{title.title}</StyledTableCell>
+                  </React.Fragment>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {basket?.map((products: ProductType) => (
+                <StyledTableRow
+                  className={'beers'}
+                  key={products.id}>
+                  <StyledTableCell>
+                    <img draggable={false} src={products.image} alt='beerImg'/>
+                  </StyledTableCell>
+                  <StyledTableCell component="th" scope="row">
+                    <input draggable={false} readOnly={readOnly} defaultValue={products.title}/>
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    <input
+                      draggable={false}
+                      readOnly={readOnly}
+                      defaultValue={products.category}/>
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    <input
+                      draggable={false}
+                      readOnly={readOnly}
+                      defaultValue={products.price}/>
+                  </StyledTableCell>
+                </StyledTableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </>
+      </TableContainer>
+    </div>
   );
 }

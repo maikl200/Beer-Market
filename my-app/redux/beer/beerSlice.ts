@@ -1,5 +1,6 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {ProductType} from "./ProductType";
+import {HYDRATE} from "next-redux-wrapper";
 
 export const productSlice = createSlice({
   name: 'product',
@@ -9,17 +10,24 @@ export const productSlice = createSlice({
     saleProduct: [] as ProductType[]
   },
   reducers: {
-    productBasket: (state, action) => {
+    setProductBasket: (state, action) => {
+      console.log(action.payload)
       state.basket = action.payload
     },
     clearBasket: (state, action) => {
       state.basket = action.payload
     },
-    productMarket: (state, action) => {
+    setProductMarket: (state, action) => {
       state.market = action.payload
     },
-    productSale: (state, action) => {
+    setProductSale: (state, action) => {
       state.saleProduct = action.payload
+    }
+  },
+  extraReducers: {
+    [HYDRATE]: (state, action) => {
+      state.market = action.payload.products.market
+      state.basket = action.payload.products.basket
     }
   }
 })

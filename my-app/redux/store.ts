@@ -1,12 +1,19 @@
-import {configureStore} from '@reduxjs/toolkit'
-import {beersApi} from './beer/beersApi'
+import {Action, configureStore, ThunkAction} from '@reduxjs/toolkit'
+import {createWrapper} from "next-redux-wrapper";
 import {productSliceReducer} from "./beer/beerSlice";
 
-export const store = configureStore({
-  reducer: {
-    [beersApi.reducerPath]: beersApi.reducer, products: productSliceReducer
-  },
-  middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(beersApi.middleware)
-})
+export function makeStore() {
+  return configureStore({
+    reducer: {
+      products: productSliceReducer
+    }
+  })
+}
 
-export type RootState = ReturnType<typeof store.getState>
+export const store = makeStore()
+
+export type RootStore = ReturnType<typeof makeStore>
+export type RootState = ReturnType<RootStore['getState']>
+export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, RootState, unknown, Action<string>>
+
+export const wrapper = createWrapper<RootStore>(makeStore)

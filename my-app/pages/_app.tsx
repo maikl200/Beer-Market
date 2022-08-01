@@ -1,11 +1,9 @@
 import React from "react";
 
-import {Provider} from "react-redux";
 import {NextPage} from "next";
-import {store} from "../redux/store";
+import {wrapper} from "../redux/store";
 
 import '../styles/globals.css'
-
 
 interface props {
   Component: React.FC
@@ -13,9 +11,7 @@ interface props {
 }
 
 const MyApp: NextPage<props> = ({Component, pageProps}) => {
-  return <Provider store={store}>
-    <Component {...pageProps} />
-  </Provider>
+  return <Component {...pageProps} />
 }
 
-export default MyApp
+export default wrapper.withRedux(MyApp)

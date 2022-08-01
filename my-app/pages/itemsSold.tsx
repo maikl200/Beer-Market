@@ -15,7 +15,9 @@ const ItemsSold: FC = () => {
             title='Home Page'
           />
         </Link>
-        <CustomizedTablesSalesHistory/>
+        <div className={style.main_table_scroll}>
+          <CustomizedTablesSalesHistory/>
+        </div>
       </div>
     </div>
   );
