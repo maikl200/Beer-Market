@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {Dispatch, DragEventHandler, FormEvent, SetStateAction, useEffect, useState} from 'react';
 import {styled} from '@mui/material/styles';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -8,7 +9,6 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import {ProductType} from "../../redux/beer/ProductType";
-import {useEffect, useState} from "react";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
 import Image from "next/image";
 import CustomizedButtons from "../Button/Button";
@@ -52,7 +52,14 @@ const tableTitle = [
   {id: 5, title: ''},
 ]
 
-export default function CustomizedTablesBasket({setIsShowBtn, dragOverHandler, dropHandler}: any) {
+interface TableBasketProps {
+  setIsShowBtn: Dispatch<SetStateAction<boolean>>
+  dragOverHandler: DragEventHandler<HTMLDivElement>
+  dropHandler: (e: FormEvent<HTMLFormElement>) => void | DragEventHandler<HTMLDivElement>
+}
+
+
+export default function CustomizedTablesBasket({setIsShowBtn, dragOverHandler, dropHandler}: TableBasketProps) {
   const {basket} = useTypedSelector(state => state.products)
   const {setProductBasket} = useAction()
   const [editId, setEditId] = useState<number>(0)
@@ -69,11 +76,10 @@ export default function CustomizedTablesBasket({setIsShowBtn, dragOverHandler, d
       const findProduct = basket.find(item => item.id === id)
       const mapProduct = basket.map(item => {
         if (item.id === findProduct!.id) {
-          const data = {
+          return {
             ...findProduct,
             ...dataInput,
           }
-          return data
         }
         return item
       })
@@ -84,7 +90,7 @@ export default function CustomizedTablesBasket({setIsShowBtn, dragOverHandler, d
     }
   }
 
-  const handleChange = (name: string) => (e: any) => {
+  const handleChange = (name: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
     setDataInput(st => ({...st, [name]: e.target.value}))
   }
   return (

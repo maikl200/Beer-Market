@@ -5,7 +5,7 @@ import CustomizedButtons from "../UI/Button/Button";
 import Link from "next/link";
 import {wrapper} from "../redux/store";
 import {parseCookies} from "nookies";
-import {productSliceAction} from "../redux/beer/beerSlice";
+import {productSliceAction} from "../redux/beer/ProductsSlice";
 
 const ItemsSold: FC = () => {
   return (

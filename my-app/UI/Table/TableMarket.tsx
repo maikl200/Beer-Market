@@ -10,6 +10,7 @@ import Paper from '@mui/material/Paper';
 import {ProductType} from "../../redux/beer/ProductType";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
 import Image from 'next/image'
+import {FormEvent} from "react";
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -38,17 +39,18 @@ const tableTitle = [
   {id: 4, title: 'Volume'},
 ]
 
-export default function CustomizedTablesMarket({dragStartHandler, dragLeaveHandler}: any) {
+interface TableMarketProps {
+  dragStartHandler: (product: ProductType) => void
+}
+
+export default function CustomizedTablesMarket({dragStartHandler}: TableMarketProps) {
   const {market} = useTypedSelector(state => state.products)
 
   return (
     <div
-      style={{height: 660, border: "1px solid black", borderRadius: '6px'}}
-    >
+      style={{height: 660, border: "1px solid black", borderRadius: '6px'}}>
       <TableContainer component={Paper}>
-        <Table
-          style={{height: 657.500}}
-        >
+        <Table>
           <TableHead>
             <TableRow>
               {tableTitle?.map((title) => (
@@ -61,8 +63,7 @@ export default function CustomizedTablesMarket({dragStartHandler, dragLeaveHandl
           <TableBody>
             {market?.map((product: ProductType) => (
               <StyledTableRow
-                onDragStart={(e) => dragStartHandler(e, product)}
-                onDragLeave={(e) => dragLeaveHandler(e)}
+                onDragStart={() => dragStartHandler(product)}
                 className={'beers'}
                 draggable={true}
                 key={product.id}>

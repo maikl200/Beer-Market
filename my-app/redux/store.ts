@@ -1,6 +1,6 @@
 import {Action, configureStore, ThunkAction} from '@reduxjs/toolkit'
 import {createWrapper} from "next-redux-wrapper";
-import {productSliceReducer} from "./beer/beerSlice";
+import {productSliceReducer} from "./beer/ProductsSlice";
 
 export function makeStore() {
   return configureStore({

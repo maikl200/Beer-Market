@@ -7,7 +7,7 @@ import '../styles/globals.css'
 
 interface props {
   Component: React.FC
-  pageProps: any
+  pageProps: {}
 }
 
 const MyApp: NextPage<props> = ({Component, pageProps}) => {

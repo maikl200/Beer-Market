@@ -1,7 +1,7 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react'
 import {HYDRATE} from "next-redux-wrapper";
 
-export const beersApi = createApi({
+export const productsApi = createApi({
   reducerPath: 'beersApi',
   baseQuery: fetchBaseQuery({baseUrl: 'https://fakestoreapi.com'}),
   endpoints: (build) => ({
@@ -17,4 +17,4 @@ export const beersApi = createApi({
   },
 })
 
-export const { useGetBeersQuery } = beersApi
+export const { useGetBeersQuery } = productsApi
