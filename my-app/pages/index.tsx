@@ -15,7 +15,7 @@ import {useTypedSelector} from "../hooks/useTypedSelector";
 import {wrapper} from "../redux/store";
 import {productSliceAction} from "../redux/beer/beerSlice";
 
-const Index = ({dataBasketProduct}: any) => {
+const Index = () => {
   const {clearBasket, setProductBasket, setProductSale, setProductMarket} = useAction()
   const [card, setCard] = useState<any>()
   const [isShowBtn, setIsShowBtn] = useState(false)
@@ -43,8 +43,9 @@ const Index = ({dataBasketProduct}: any) => {
   }
 
   const salesProduct = () => {
-    setProductSale(dataBasketProduct)
+    setProductSale([...saleProduct, ...basket])
     nookies.set(null, 'saleProduct', JSON.stringify([...saleProduct, ...basket]))
+    nookies.set(null, 'selectProduct', JSON.stringify([]))
     clearBasket([])
     setIsShowBtn(false)
   }
@@ -63,21 +64,21 @@ const Index = ({dataBasketProduct}: any) => {
           dragLeaveHandler={dragLeaveHandler}
         />
         {isShowBtn &&
-            <div className={style.wrapper_market_btn}>
-              <Link href='/itemsSold'>
-                <CustomizedButtons
-                    backColorHover='#0a3d62'
-                    backColor='#60a3bc'
-                    title='Sales History'
-                />
-              </Link>
+          <div className={style.wrapper_market_btn}>
+            <Link href='/itemsSold'>
               <CustomizedButtons
-                  backColor='#079992'
-                  backColorHover='#78e08f'
-                  title='Sell'
-                  onClick={salesProduct}
+                backColorHover='#0a3d62'
+                backColor='#60a3bc'
+                title='Sales History'
               />
-            </div>}
+            </Link>
+            <CustomizedButtons
+              backColor='#079992'
+              backColorHover='#78e08f'
+              title='Sell'
+              onClick={salesProduct}
+            />
+          </div>}
       </div>
       <div className={style.wrapper_basket}>
         <p className={style.wrapper_market_title}>Basket</p>
@@ -98,7 +99,6 @@ export const getServerSideProps = wrapper.getServerSideProps(store => async (ctx
   const data = await response.json()
   const cookies = parseCookies(ctx)
 
-
   const dataBasketProduct = cookies.selectProduct ? await JSON.parse(cookies.selectProduct) : []
   const dataProduct = cookies.products ? await JSON.parse(cookies.products) : []
   const dataSaleProduct = cookies.saleProduct ? await JSON.parse(cookies.saleProduct) : []
@@ -110,5 +110,5 @@ export const getServerSideProps = wrapper.getServerSideProps(store => async (ctx
   store.dispatch(productSliceAction.setProductBasket(dataBasketProduct))
   store.dispatch(productSliceAction.setProductSale(dataSaleProduct))
 
-  return {props: {dataBasketProduct, dataSaleProduct}}
+  return {props: {}}
 })

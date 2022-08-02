@@ -9,6 +9,7 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import {ProductType} from "../../redux/beer/ProductType";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
+import Image from 'next/image'
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -19,9 +20,6 @@ const StyledTableCell = styled(TableCell)(({theme}) => ({
     fontSize: 14,
   },
   maxWidth: 70,
-  'img': {
-    width: '30%'
-  },
 }));
 
 const StyledTableRow = styled(TableRow)(({theme}) => ({
@@ -45,7 +43,7 @@ export default function CustomizedTablesMarket({dragStartHandler, dragLeaveHandl
 
   return (
     <div
-      style={{height: 650, border: "1px solid black", borderRadius: '6px'}}
+      style={{height: 660, border: "1px solid black", borderRadius: '6px'}}
     >
       <TableContainer component={Paper}>
         <Table
@@ -69,7 +67,13 @@ export default function CustomizedTablesMarket({dragStartHandler, dragLeaveHandl
                 draggable={true}
                 key={product.id}>
                 <StyledTableCell>
-                  <img draggable={false} src={product.image} alt='itemImg'/>
+                  <Image
+                    draggable={false}
+                    width={40}
+                    height={40}
+                    src={product.image}
+                    alt='itemImg'
+                  />
                 </StyledTableCell>
                 <StyledTableCell component="th" scope="row" draggable={false}>
                   {product.title}

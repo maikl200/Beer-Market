@@ -8,6 +8,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import {useTypedSelector} from "../../hooks/useTypedSelector";
+import Image from "next/image";
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -27,9 +28,6 @@ const StyledTableRow = styled(TableRow)(({theme}) => ({
   '&:last-child td, &:last-child th': {
     border: 0,
   },
-  'img': {
-    width: '10%'
-  },
 }));
 
 const tableTitle = [
@@ -39,10 +37,9 @@ const tableTitle = [
   {id: 4, title: 'Volume'},
 ]
 
-
 export default function CustomizedTablesSalesHistory() {
   const {saleProduct} = useTypedSelector(state => state.products)
-  console.log('aaa', saleProduct)
+
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -58,7 +55,15 @@ export default function CustomizedTablesSalesHistory() {
         <TableBody>
           {saleProduct?.map((product) => (
             <StyledTableRow key={product.id}>
-              <img draggable={false} src={product.image} alt='itemImg'/>
+              <StyledTableCell>
+                <Image
+                  draggable={false}
+                  width={40}
+                  height={40}
+                  src={product.image}
+                  alt='itemImg'
+                />
+              </StyledTableCell>
               <StyledTableCell>
                 {product.title}
               </StyledTableCell>

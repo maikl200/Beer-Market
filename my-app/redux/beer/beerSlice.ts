@@ -15,6 +15,7 @@ export const productSlice = createSlice({
       state.basket = action.payload
     },
     clearBasket: (state, action) => {
+      console.log(action.payload)
       state.basket = action.payload
     },
     setProductMarket: (state, action) => {
@@ -26,9 +27,9 @@ export const productSlice = createSlice({
   },
   extraReducers: {
     [HYDRATE]: (state, action) => {
-      console.log('dddd',action.payload.products)
       state.market = action.payload.products.market
       state.basket = action.payload.products.basket
+      state.saleProduct = action.payload.products.saleProduct
     }
   }
 })

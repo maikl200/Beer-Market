@@ -10,6 +10,10 @@ import Paper from '@mui/material/Paper';
 import {ProductType} from "../../redux/beer/ProductType";
 import {useEffect, useState} from "react";
 import {useTypedSelector} from "../../hooks/useTypedSelector";
+import Image from "next/image";
+import CustomizedButtons from "../Button/Button";
+import {useAction} from "../../hooks/useAction";
+import nookies from "nookies";
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -22,9 +26,6 @@ const StyledTableCell = styled(TableCell)(({theme}) => ({
     maxHeight: 600,
   },
   maxWidth: 70,
-  'img': {
-    width: '30%'
-  },
   'input': {
     width: '100%',
     border: 'none',
@@ -48,16 +49,44 @@ const tableTitle = [
   {id: 2, title: 'Title'},
   {id: 3, title: 'Category'},
   {id: 4, title: 'Volume'},
+  {id: 5, title: ''},
 ]
 
 export default function CustomizedTablesBasket({setIsShowBtn, dragOverHandler, dropHandler}: any) {
   const {basket} = useTypedSelector(state => state.products)
-  const [readOnly, setReadOnly] = useState<boolean>(true)
+  const {setProductBasket} = useAction()
+  const [editId, setEditId] = useState<number>(0)
+  const [dataInput, setDataInput] = useState([])
 
   useEffect(() => {
     if (basket?.length) setIsShowBtn(true)
   }, [basket])
 
+  const editProduct = (id: number) => {
+
+    if (id === editId) {
+      setEditId(0)
+      const findProduct = basket.find(item => item.id === id)
+      const mapProduct = basket.map(item => {
+        if (item.id === findProduct!.id) {
+          const data = {
+            ...findProduct,
+            ...dataInput,
+          }
+          return data
+        }
+        return item
+      })
+      setProductBasket(mapProduct)
+      nookies.set(null, 'selectProduct', JSON.stringify(mapProduct))
+    } else {
+      setEditId(id)
+    }
+  }
+
+  const handleChange = (name: string) => (e: any) => {
+    setDataInput(st => ({...st, [name]: e.target.value}))
+  }
   return (
     <div
       onDragOver={dragOverHandler}
@@ -77,31 +106,48 @@ export default function CustomizedTablesBasket({setIsShowBtn, dragOverHandler, d
               </TableRow>
             </TableHead>
             <TableBody>
-              {basket?.map((products: ProductType) => (
+              {basket?.map((product: ProductType) => (
                 <StyledTableRow
                   className={'beers'}
-                  key={products.id}>
+                  key={product.id}>
                   <StyledTableCell>
-                    <img
+                    <Image
                       draggable={false}
-                      src={products.image}
-                      alt='beerImg'
+                      width={40}
+                      height={40}
+                      src={product.image}
+                      alt='itemImg'
                     />
                   </StyledTableCell>
                   <StyledTableCell component="th" scope="row">
-                    <input draggable={false} readOnly={readOnly} defaultValue={products.title}/>
+                    <input
+                      draggable={false}
+                      onChange={handleChange('title')}
+                      readOnly={product.id !== editId}
+                      defaultValue={product.title}/>
                   </StyledTableCell>
                   <StyledTableCell>
                     <input
+                      onChange={handleChange('category')}
                       draggable={false}
-                      readOnly={readOnly}
-                      defaultValue={products.category}/>
+                      readOnly={product.id !== editId}
+                      defaultValue={product.category}/>
                   </StyledTableCell>
                   <StyledTableCell>
                     <input
+                      onChange={handleChange('price')}
                       draggable={false}
-                      readOnly={readOnly}
-                      defaultValue={products.price}/>
+                      readOnly={product.id !== editId}
+                      defaultValue={product.price}/>
+                  </StyledTableCell>
+                  <StyledTableCell>
+                    {product.id !== editId
+                      ?
+                      <CustomizedButtons onClick={() => editProduct(product.id)} title='Edit'/>
+                      :
+                      <CustomizedButtons onClick={() => editProduct(product.id)} title='OK'/>
+
+                    }
                   </StyledTableCell>
                 </StyledTableRow>
               ))}
