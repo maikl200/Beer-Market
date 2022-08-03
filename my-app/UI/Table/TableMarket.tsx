@@ -1,16 +1,17 @@
 import * as React from 'react';
-import {styled} from '@mui/material/styles';
+import Image from 'next/image'
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell, {tableCellClasses} from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
+import TableCell, {tableCellClasses} from '@mui/material/TableCell';import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import {ProductType} from "../../redux/beer/ProductType";
+
 import {useTypedSelector} from "../../hooks/useTypedSelector";
-import Image from 'next/image'
-import {FormEvent} from "react";
+
+import {ProductType} from "../../redux/product/ProductType";
+
+import {styled} from '@mui/material/styles';
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -64,13 +65,12 @@ export default function CustomizedTablesMarket({dragStartHandler}: TableMarketPr
             {market?.map((product: ProductType) => (
               <StyledTableRow
                 onDragStart={() => dragStartHandler(product)}
-                className={'beers'}
                 draggable={true}
                 key={product.id}>
                 <StyledTableCell>
                   <Image
                     draggable={false}
-                    width={40}
+                    width={30}
                     height={40}
                     src={product.image}
                     alt='itemImg'

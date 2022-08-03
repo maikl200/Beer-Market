@@ -11,7 +11,6 @@ export const productSlice = createSlice({
   },
   reducers: {
     setProductBasket: (state, action) => {
-      console.log(action.payload)
       state.basket = action.payload
     },
     clearBasket: (state, action) => {

@@ -1,4 +1,4 @@
-import {productSliceAction} from "../redux/beer/ProductsSlice";
+import {productSliceAction} from "../redux/product/ProductsSlice";
 import {useDispatch} from "react-redux";
 import {bindActionCreators} from "redux";
 

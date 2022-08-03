@@ -1,19 +1,23 @@
 import * as React from 'react';
-import {Dispatch, DragEventHandler, FormEvent, SetStateAction, useEffect, useState} from 'react';
-import {styled} from '@mui/material/styles';
+import {Dispatch, SetStateAction, useEffect, useState} from 'react';
+import Image from "next/image";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell, {tableCellClasses} from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import {ProductType} from "../../redux/beer/ProductType";
-import {useTypedSelector} from "../../hooks/useTypedSelector";
-import Image from "next/image";
+import TableCell, {tableCellClasses} from '@mui/material/TableCell';
+
 import CustomizedButtons from "../Button/Button";
-import {useAction} from "../../hooks/useAction";
+
 import nookies from "nookies";
+import {useTypedSelector} from "../../hooks/useTypedSelector";
+import {useAction} from "../../hooks/useAction";
+
+import {ProductType} from "../../redux/product/ProductType";
+
+import {styled} from '@mui/material/styles';
 
 const StyledTableCell = styled(TableCell)(({theme}) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -54,16 +58,23 @@ const tableTitle = [
 
 interface TableBasketProps {
   setIsShowBtn: Dispatch<SetStateAction<boolean>>
-  dragOverHandler: DragEventHandler<HTMLDivElement>
-  dropHandler: (e: FormEvent<HTMLFormElement>) => void | DragEventHandler<HTMLDivElement>
+  dragOverHandler: (e: React.DragEvent<HTMLDivElement> | React.FormEvent<HTMLInputElement>) => void
+  dropHandler: (e: React.DragEvent<HTMLDivElement> | React.FormEvent<HTMLInputElement>) => void
+  setIsDisabled: Dispatch<SetStateAction<boolean>>
 }
 
 
-export default function CustomizedTablesBasket({setIsShowBtn, dragOverHandler, dropHandler}: TableBasketProps) {
+export default function CustomizedTablesBasket(
+  {
+    setIsShowBtn,
+    dragOverHandler,
+    dropHandler,
+    setIsDisabled
+  }: TableBasketProps) {
   const {basket} = useTypedSelector(state => state.products)
   const {setProductBasket} = useAction()
   const [editId, setEditId] = useState<number>(0)
-  const [dataInput, setDataInput] = useState([])
+  const [dataInput, setDataInput] = useState<string[]>([])
 
   useEffect(() => {
     if (basket?.length) setIsShowBtn(true)
@@ -83,10 +94,13 @@ export default function CustomizedTablesBasket({setIsShowBtn, dragOverHandler, d
         }
         return item
       })
+      setDataInput([])
       setProductBasket(mapProduct)
       nookies.set(null, 'selectProduct', JSON.stringify(mapProduct))
+      setIsDisabled(false)
     } else {
       setEditId(id)
+      setIsDisabled(true)
     }
   }
 
@@ -95,8 +109,8 @@ export default function CustomizedTablesBasket({setIsShowBtn, dragOverHandler, d
   }
   return (
     <div
-      onDragOver={dragOverHandler}
-      onDrop={dropHandler}
+      onDragOver={(e) => dragOverHandler(e)}
+      onDrop={(e) => dropHandler(e)}
       style={{height: 675, border: "1px solid black", borderRadius: '6px'}}>
       <TableContainer component={Paper}>
         <>
@@ -114,12 +128,11 @@ export default function CustomizedTablesBasket({setIsShowBtn, dragOverHandler, d
             <TableBody>
               {basket?.map((product: ProductType) => (
                 <StyledTableRow
-                  className={'beers'}
                   key={product.id}>
                   <StyledTableCell>
                     <Image
                       draggable={false}
-                      width={40}
+                      width={30}
                       height={40}
                       src={product.image}
                       alt='itemImg'
