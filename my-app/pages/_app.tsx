@@ -1,21 +1,24 @@
 import React from "react";
 
-import {Provider} from "react-redux";
 import {NextPage} from "next";
-import {store} from "../redux/store";
+
+import ResponsiveAppBar from "../UI/Header/Header";
+import {wrapper} from "../redux/store";
 
 import '../styles/globals.css'
 
-
 interface props {
   Component: React.FC
-  pageProps: any
+  pageProps: {}
 }
 
 const MyApp: NextPage<props> = ({Component, pageProps}) => {
-  return <Provider store={store}>
-    <Component {...pageProps} />
-  </Provider>
+  return (
+    <>
+      <ResponsiveAppBar/>
+      <Component {...pageProps}/>
+    </>
+  )
 }
 
-export default MyApp
+export default wrapper.withRedux(MyApp)

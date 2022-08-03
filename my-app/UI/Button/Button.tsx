@@ -1,15 +1,18 @@
 import * as React from 'react';
-import {styled} from '@mui/material/styles';
+
 import Button from '@mui/material/Button';
+
+import {styled} from '@mui/material/styles';
 
 interface ButtonMuiStyleProps {
   title?: string
-  backColor?: string
-  backColorHover?: string
+  backcolor?: string
+  backcolorhover?: string
 }
 
 interface ButtonMuiProps extends ButtonMuiStyleProps {
-  onClick?: () => void
+  onClick?: () => void,
+  disabled?: boolean
 }
 
 const BootstrapButton = styled(Button)<ButtonMuiStyleProps>`
@@ -17,23 +20,25 @@ const BootstrapButton = styled(Button)<ButtonMuiStyleProps>`
   font-size: 16px;
   padding: 6px 12px;
   line-height: 1.5rem;
-  background-color: ${({backColor}) => backColor};
+  background-color: ${({backcolor}) => backcolor};
 
   :hover {
-    background-color: ${({backColorHover}) => backColorHover};
+    background-color: ${({backcolorhover}) => backcolorhover};
   }`
 
 export default function CustomizedButtons(
   {
     onClick,
+    disabled,
     title,
-    backColor,
-    backColorHover
+    backcolor,
+    backcolorhover
   }: ButtonMuiProps) {
   return (
     <BootstrapButton
-      backColor={backColor}
-      backColorHover={backColorHover}
+      disabled={disabled}
+      backcolor={backcolor}
+      backcolorhover={backcolorhover}
       variant="contained"
       onClick={onClick}
       disableRipple>
